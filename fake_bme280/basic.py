@@ -93,6 +93,7 @@ DATA_SOURCE = (
     + os.getenv("openweather_token")
 )
 
+
 class Adafruit_BME280:
     """Driver from BME280 Temperature, Humidity and Barometric Pressure sensor
 
@@ -118,8 +119,10 @@ class Adafruit_BME280:
         """Pressure in hectoPascals at sea level. Used to calibrate `altitude`."""
         self._t_fine = None
         # Configure OpenWeather for mock data
-        self.openweather_token = os.getenv('OPENWEATHER_TOKEN', 'default_token')
-        self.openweather_location = os.getenv('OPENWEATHER_LOCATION', 'default_location')
+        self.openweather_token = os.getenv("OPENWEATHER_TOKEN", "default_token")
+        self.openweather_location = os.getenv(
+            "OPENWEATHER_LOCATION", "default_location"
+        )
         # Configure a CPython adafruit_requests session
         self.requests = adafruit_requests.Session(pool, ssl.create_default_context())
         self._current_forcast = None
@@ -128,40 +131,19 @@ class Adafruit_BME280:
 
     def get_forecast(self):
         """Fetch weather from OpenWeatherMap API"""
-        print("Fetching json from", DATA_SOURCE)
+        # print("Fetching json from", DATA_SOURCE)
         response = self.requests.get(DATA_SOURCE)
         self._current_forcast = response.json()
         # print(self._current_forcast)
 
     def _read_temperature(self) -> None:
-        # TODO: This should get the OpenWeather temperature
-        # and store it in self._t_fine
+        # Get the OpenWeather temperature and store it in _t_fine
         self.get_forecast()
-        self._t_fine = self._current_forcast['main']['temp']
+        self._t_fine = self._current_forcast["main"]["temp"]
 
     def _reset(self) -> None:
         """Soft reset the sensor"""
         sleep(0.004)  # Datasheet says 2ms.  Using 4ms just to be safe
-        pass
-
-    def _write_ctrl_meas(self) -> None:
-        """
-        Write the values to the ctrl_meas and ctrl_hum registers in the device
-        ctrl_meas sets the pressure and temperature data acquisition options
-        ctrl_hum sets the humidity oversampling and must be written to first
-        """
-        pass
-
-    def _get_status(self) -> int:
-        """Get the value from the status register in the device"""
-        pass
-
-    def _read_config(self) -> int:
-        """Read the value from the config register in the device"""
-        pass
-
-    def _write_config(self) -> None:
-        """Write the value to the config register in the device"""
         pass
 
     @property
@@ -209,14 +191,13 @@ class Adafruit_BME280:
         The compensated pressure in hectoPascals.
         """
         self._read_temperature()
-        return self._current_forcast['main']['pressure']
+        return self._current_forcast["main"]["pressure"]
 
     @property
     def relative_humidity(self) -> float:
         """
         The relative humidity in RH %
         """
-        # TODO: Mock this with the OpenWeatherMap API
         return self.humidity
 
     @property
@@ -225,7 +206,7 @@ class Adafruit_BME280:
         The relative humidity in RH %
         """
         self._read_temperature()
-        humidity = self._current_forcast['main']['humidity']
+        humidity = self._current_forcast["main"]["humidity"]
         if humidity > 100:
             return 100
         if humidity < 0:
@@ -241,7 +222,6 @@ class Adafruit_BME280:
 
 
 class Adafruit_BME280_I2C(Adafruit_BME280):
-
     """Driver for BME280 connected over I2C
 
     :param ~busio.I2C i2c: The I2C bus the BME280 is connected to.
@@ -292,7 +272,6 @@ class Adafruit_BME280_I2C(Adafruit_BME280):
 
 
 class Adafruit_BME280_SPI(Adafruit_BME280):
-
     """Driver for BME280 connected over SPI
 
     :param ~busio.SPI spi: SPI device

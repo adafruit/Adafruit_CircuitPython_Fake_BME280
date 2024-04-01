@@ -17,19 +17,6 @@ class I2C_Impl:
 
         self._i2c = i2c_device.I2CDevice(i2c, address)
 
-    def read_register(self, register: int, length: int) -> bytearray:
-        "Read from the device register."
-        with self._i2c as i2c:
-            i2c.write(bytes([register & 0xFF]))
-            result = bytearray(length)
-            i2c.readinto(result)
-            return result
-
-    def write_register_byte(self, register: int, value: int) -> None:
-        """Write to the device register"""
-        with self._i2c as i2c:
-            i2c.write(bytes([register & 0xFF, value & 0xFF]))
-
 
 class SPI_Impl:
     """Protocol implemenation for the SPI bus."""
@@ -45,19 +32,3 @@ class SPI_Impl:
         )
 
         self._spi = spi_device.SPIDevice(spi, cs, baudrate=baudrate)
-
-    def read_register(self, register: int, length: int) -> bytearray:
-        "Read from the device register."
-        register = (register | 0x80) & 0xFF  # Read single, bit 7 high.
-        with self._spi as spi:
-            spi.write(bytearray([register]))  # pylint: disable=no-member
-            result = bytearray(length)
-            spi.readinto(result)  # pylint: disable=no-member
-            # print("$%02X => %s" % (register, [hex(i) for i in result]))
-            return result
-
-    def write_register_byte(self, register: int, value: int) -> None:
-        "Write value to the device register."
-        register &= 0x7F  # Write, bit 7 low.
-        with self._spi as spi:
-            spi.write(bytes([register, value & 0xFF]))  # pylint: disable=no-member
