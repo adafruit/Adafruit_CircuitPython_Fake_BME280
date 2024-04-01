@@ -25,16 +25,15 @@ Implementation Notes
 * Adafruit CircuitPython firmware for the supported boards:
   https://circuitpython.org/downloads
 """
-import os
 import math
+import os
 import struct
 from time import sleep
 
-from micropython import const
 from fake_bme280.protocol import I2C_Impl, SPI_Impl
-
+from micropython import const
+import typing  # pylint: disable=unused-import
 try:
-    import typing  # pylint: disable=unused-import
     from busio import I2C, SPI
     from digitalio import DigitalInOut
 except ImportError:
@@ -141,11 +140,6 @@ class Adafruit_BME280:
         self.get_forecast()
         self._t_fine = self._current_forcast["main"]["temp"]
 
-    def _reset(self) -> None:
-        """Soft reset the sensor"""
-        sleep(0.004)  # Datasheet says 2ms.  Using 4ms just to be safe
-        pass
-
     @property
     def mode(self) -> int:
         """
@@ -159,7 +153,6 @@ class Adafruit_BME280:
         if not value in _BME280_MODES:
             raise ValueError("Mode '%s' not supported" % (value))
         self._mode = value
-        pass
 
     @property
     def _config(self) -> int:

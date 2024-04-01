@@ -9,7 +9,7 @@ from digitalio import DigitalInOut
 
 class I2C_Impl:
     "Protocol implementation for the I2C bus."
-
+    # pylint: disable=too-few-public-methods
     def __init__(self, i2c: I2C, address: int) -> None:
         from adafruit_bus_device import (  # pylint: disable=import-outside-toplevel
             i2c_device,
@@ -20,15 +20,14 @@ class I2C_Impl:
 
 class SPI_Impl:
     """Protocol implemenation for the SPI bus."""
-
     def __init__(
         self,
         spi: SPI,
-        cs: DigitalInOut,
+        chip_select: DigitalInOut,
         baudrate: int = 100000,
     ) -> None:
         from adafruit_bus_device import (  # pylint: disable=import-outside-toplevel
             spi_device,
         )
 
-        self._spi = spi_device.SPIDevice(spi, cs, baudrate=baudrate)
+        self._spi = spi_device.SPIDevice(spi, chip_select, baudrate=baudrate)
