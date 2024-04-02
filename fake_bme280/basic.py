@@ -34,6 +34,7 @@ import typing  # pylint: disable=unused-import
 from micropython import const
 import adafruit_requests
 from fake_bme280.protocol import I2C_Impl, SPI_Impl
+
 try:
     from busio import I2C, SPI
     from digitalio import DigitalInOut
