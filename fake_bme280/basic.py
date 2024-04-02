@@ -27,7 +27,6 @@ Implementation Notes
 """
 import math
 import os
-from time import sleep
 import socket as pool
 import ssl
 import typing  # pylint: disable=unused-import
