@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
+# SPDX-FileCopyrightText: 2017 Scott Shawcroft, written for Adafruit Industries
 #
 # SPDX-License-Identifier: MIT
 
@@ -19,18 +19,26 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinxcontrib.jquery",
     "sphinx.ext.intersphinx",
-    "sphinx.ext.viewcode",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.todo",
 ]
 
-# API docs fix
+# TODO: Please Read!
+# Uncomment the below if you use native CircuitPython modules such as
+# digitalio, micropython and busio. List the modules you use. Without it, the
+# autodoc module docs will fail to generate with a warning.
+# autodoc_mock_imports = ["digitalio", "busio"]
+
+autodoc_preserve_defaults = True
+
+
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
-    "BusDevice": (
-        "https://docs.circuitpython.org/projects/busdevice/en/latest/",
-        None,
-    ),
     "CircuitPython": ("https://docs.circuitpython.org/en/latest/", None),
 }
+
+# Show the docstring from both the class and its __init__() method.
+autoclass_content = "both"
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -41,16 +49,16 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = "Adafruit BME280 Library"
-creation_year = "2017"
+project = "CircuitPython CircuitPython Fake BME280 Library"
+creation_year = "2024"
 current_year = str(datetime.datetime.now().year)
 year_duration = (
     current_year
     if current_year == creation_year
     else creation_year + " - " + current_year
 )
-copyright = year_duration + " ladyada"
-author = "ladyada"
+copyright = year_duration + " Brent Rubell"
+author = "Brent Rubell"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -71,7 +79,13 @@ language = "en"
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This patterns also effect to html_static_path and html_extra_path
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", ".env", "CODE_OF_CONDUCT.md"]
+exclude_patterns = [
+    "_build",
+    "Thumbs.db",
+    ".DS_Store",
+    ".env",
+    "CODE_OF_CONDUCT.md",
+]
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
@@ -91,6 +105,7 @@ todo_include_todos = False
 # If this is True, todo emits a warning for each TODO entries. The default is False.
 todo_emit_warnings = True
 
+napoleon_numpy_docstring = False
 
 # -- Options for HTML output ----------------------------------------------
 
@@ -114,22 +129,18 @@ html_static_path = ["_static"]
 html_favicon = "_static/favicon.ico"
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "AdafruitBME280Librarydoc"
+htmlhelp_basename = "CircuitPython_Circuitpython_fake_bme280_Librarydoc"
 
 # -- Options for LaTeX output ---------------------------------------------
 
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
-    #
     # 'papersize': 'letterpaper',
     # The font size ('10pt', '11pt' or '12pt').
-    #
     # 'pointsize': '10pt',
     # Additional stuff for the LaTeX preamble.
-    #
     # 'preamble': '',
     # Latex figure (float) alignment
-    #
     # 'figure_align': 'htbp',
 }
 
@@ -139,8 +150,8 @@ latex_elements = {
 latex_documents = [
     (
         master_doc,
-        "AdafruitBME280Library.tex",
-        "Adafruit BME280 Library Documentation",
+        "CircuitPython_CircuitPython_Fake_BME280_Library.tex",
+        "CircuitPython CircuitPython Fake BME280 Library Documentation",
         author,
         "manual",
     ),
@@ -153,11 +164,11 @@ latex_documents = [
 man_pages = [
     (
         master_doc,
-        "adafruitBME280library",
-        "Adafruit BME280 Library Documentation",
+        "CircuitPython_CircuitPython_Fake_BME280_Library",
+        "CircuitPython CircuitPython Fake BME280 Library Documentation",
         [author],
         1,
-    )
+    ),
 ]
 
 # -- Options for Texinfo output -------------------------------------------
@@ -168,14 +179,11 @@ man_pages = [
 texinfo_documents = [
     (
         master_doc,
-        "AdafruitBME280Library",
-        "Adafruit BME280 Library Documentation",
+        "CircuitPython_CircuitPython_Fake_BME280_Library",
+        "CircuitPython CircuitPython Fake BME280 Library Documentation",
         author,
-        "AdafruitBME280Library",
+        "CircuitPython_CircuitPython_Fake_BME280_Library",
         "One line description of project.",
         "Miscellaneous",
     ),
 ]
-
-# API docs fix
-autodoc_mock_imports = ["micropython"]
