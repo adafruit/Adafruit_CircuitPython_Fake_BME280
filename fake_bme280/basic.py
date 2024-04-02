@@ -27,20 +27,18 @@ Implementation Notes
 """
 import math
 import os
-import struct
 from time import sleep
+from micropython import const
+import socket as pool
+import ssl
+import typing  # pylint: disable=unused-import
 
 from fake_bme280.protocol import I2C_Impl, SPI_Impl
-from micropython import const
-import typing  # pylint: disable=unused-import
 try:
     from busio import I2C, SPI
     from digitalio import DigitalInOut
 except ImportError:
     pass
-
-import socket as pool
-import ssl
 
 import adafruit_requests
 

@@ -20,6 +20,7 @@ class I2C_Impl:
 
 class SPI_Impl:
     """Protocol implemenation for the SPI bus."""
+    # pylint: disable=too-few-public-methods
     def __init__(
         self,
         spi: SPI,
