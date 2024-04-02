@@ -28,19 +28,17 @@ Implementation Notes
 import math
 import os
 from time import sleep
-from micropython import const
 import socket as pool
 import ssl
+from micropython import const
 import typing  # pylint: disable=unused-import
-
+import adafruit_requests
 from fake_bme280.protocol import I2C_Impl, SPI_Impl
 try:
     from busio import I2C, SPI
     from digitalio import DigitalInOut
 except ImportError:
     pass
-
-import adafruit_requests
 
 __version__ = "2.6.4"
 __repo__ = "https://github.com/brentru/CircuitPython_Fake_BME280.git"
