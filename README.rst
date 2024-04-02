@@ -18,16 +18,20 @@ Introduction
     :target: https://github.com/psf/black
     :alt: Code Style: Black
 
-BME280 Driver for CircuitPython used for testing functionality with no hardware attached
+**This code is for testing purposes only! If you are looking for a Bosch BME280 driver, please use the [Adafruit_CircuitPython_BME280 library](https://github.com/adafruit/Adafruit_CircuitPython_BME280)**.
 
+This driver mocks the functionality of the [Adafruit_CircuitPython_BME280 library](https://github.com/adafruit/Adafruit_CircuitPython_BME280/), allowing you to test your code without
+attaching physical hardware. 
+
+Instead of using random data, weather data is instead pulled from [the free OpenWeatherMaps API](https://openweathermap.org)
+and returned as if it were coming from the BME280 sensor properties. A free OpenWeatherMaps API key is **required** to use this library (see the Usage section below for more information).
 
 Dependencies
 =============
 This driver depends on:
 
 * `Adafruit CircuitPython <https://github.com/adafruit/circuitpython>`_
-* `Bus Device <https://github.com/adafruit/Adafruit_CircuitPython_BusDevice>`_
-* `Register <https://github.com/adafruit/Adafruit_CircuitPython_Register>`_
+* `Adafruit_CircuitPython_Requests <https://github.com/adafruit/Adafruit_CircuitPython_Requests>`_
 
 Please ensure all dependencies are available on the CircuitPython filesystem.
 This is easily achieved by downloading
@@ -37,10 +41,6 @@ or individual libraries can be installed using
 
 Installing from PyPI
 =====================
-.. note:: This library is not available on PyPI yet. Install documentation is included
-   as a standard element. Stay tuned for PyPI availability!
-
-.. todo:: Remove the above note if PyPI version is/will be available at time of release.
 
 On supported GNU/Linux systems like the Raspberry Pi, you can install the driver locally `from
 PyPI <https://pypi.org/project/circuitpython-fake-bme280/>`_.
@@ -65,34 +65,20 @@ To install in a virtual environment in your current project:
     source .env/bin/activate
     pip3 install circuitpython-fake-bme280
 
-Installing to a Connected CircuitPython Device with Circup
-==========================================================
-
-Make sure that you have ``circup`` installed in your Python environment.
-Install it with the following command if necessary:
-
-.. code-block:: shell
-
-    pip3 install circup
-
-With ``circup`` installed and your CircuitPython device connected use the
-following command to install:
-
-.. code-block:: shell
-
-    circup install fake_bme280
-
-Or the following command to update an existing version:
-
-.. code-block:: shell
-
-    circup update
-
 Usage Example
 =============
 
-.. todo:: Add a quick, simple example. It and other examples should live in the
-examples folder and be included in docs/examples.rst.
+To obtain an OpenWeatherMaps API key, sign up for a free account at [OpenWeatherMaps](https://openweathermap.org) and [generate an API key](https://home.openweathermap.org/api_keys). Then, in the root of this
+project, add a file called `settings.toml` with the following information:
+
+.. code-block:: toml
+openweather_token = "my_api_key"
+openweather_location = "New York, US"
+openweather_units = "metric"
+
+Where `openweather_token` is your OpenWeatherMaps API key, `openweather_location` is the location you want to pull weather data from, and `openweather_units` is the units you want the temperature to be returned in (either `metric` or `imperial`).
+
+Then, run the code within examples/fake_bme280.py to use the "fake" BME280 sensor.
 
 Documentation
 =============
