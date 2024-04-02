@@ -18,13 +18,13 @@ Introduction
     :target: https://github.com/psf/black
     :alt: Code Style: Black
 
-**This code is for testing purposes only! If you are looking for a Bosch BME280 driver, please use the [Adafruit_CircuitPython_BME280 library](https://github.com/adafruit/Adafruit_CircuitPython_BME280)**.
+**This code is for testing purposes only! If you are looking for a Bosch BME280 driver, please use the `Adafruit_CircuitPython_BME280 <https://github.com/adafruit/Adafruit_CircuitPython_BME280>`_**.
 
-This driver mocks the functionality of the [Adafruit_CircuitPython_BME280 library](https://github.com/adafruit/Adafruit_CircuitPython_BME280/), allowing you to test your code without
+This driver mocks the functionality of the `Adafruit_CircuitPython_BME280 <https://github.com/adafruit/Adafruit_CircuitPython_BME280>`_, allowing you to test your code without
 attaching physical hardware. 
 
-Instead of using random data, weather data is instead pulled from [the free OpenWeatherMaps API](https://openweathermap.org)
-and returned as if it were coming from the BME280 sensor properties. A free OpenWeatherMaps API key is **required** to use this library (see the Usage section below for more information).
+Instead of using random data, weather data is instead pulled from `the OpenWeatherMaps API <https://openweathermap.org/>`_
+and returned as if it were coming from the BME280 sensor properties. A free OpenWeatherMap API key is **required** to use this library (see the Usage section below for more information).
 
 Dependencies
 =============
@@ -68,17 +68,19 @@ To install in a virtual environment in your current project:
 Usage Example
 =============
 
-To obtain an OpenWeatherMaps API key, sign up for a free account at [OpenWeatherMaps](https://openweathermap.org) and [generate an API key](https://home.openweathermap.org/api_keys). Then, in the root of this
+To obtain an OpenWeatherMaps API key, sign up for a free account at `OpenWeatherMaps <https://openweathermap.org/>`_ and generate an API key. Then, in the root of this
 project, add a file called `settings.toml` with the following information:
 
-.. code-block:: toml
+.. code-block:: shell
+
 openweather_token = "my_api_key"
 openweather_location = "New York, US"
 openweather_units = "metric"
 
-Where `openweather_token` is your OpenWeatherMaps API key, `openweather_location` is the location you want to pull weather data from, and `openweather_units` is the units you want the temperature to be returned in (either `metric` or `imperial`).
 
-Then, run the code within examples/fake_bme280.py to use the "fake" BME280 sensor.
+Where openweather_token is your OpenWeatherMaps API key, openweather_location is the location you want to pull weather data from, and openweather_units is the units you want the temperature to be returned in (either "metric" or "imperial").
+
+Then, run the code within "examples/fake_bme280.py" to use the "fake" BME280 sensor.
 
 Documentation
 =============
