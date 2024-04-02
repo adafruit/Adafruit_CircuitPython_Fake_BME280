@@ -71,8 +71,6 @@ Usage Example
 To obtain an OpenWeatherMaps API key, sign up for a free account at `OpenWeatherMaps <https://openweathermap.org/>`_ and generate an API key. Then, in the root of this
 project, add a file called `settings.toml` with the following information:
 
-.. code-block:: shell
-
 openweather_token = "my_api_key"
 openweather_location = "New York, US"
 openweather_units = "metric"
