@@ -21,7 +21,7 @@ Introduction
 **This code is for testing purposes only! If you are looking for a Bosch BME280 driver, please use the `Adafruit_CircuitPython_BME280 <https://github.com/adafruit/Adafruit_CircuitPython_BME280>`_**.
 
 This driver mocks the functionality of the `Adafruit_CircuitPython_BME280 <https://github.com/adafruit/Adafruit_CircuitPython_BME280>`_, allowing you to test your code without
-attaching physical hardware. 
+attaching physical hardware.
 
 Instead of using random data, weather data is instead pulled from `the OpenWeatherMaps API <https://openweathermap.org/>`_
 and returned as if it were coming from the BME280 sensor properties. A free OpenWeatherMap API key is **required** to use this library (see the Usage section below for more information).
