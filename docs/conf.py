@@ -49,7 +49,7 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = "CircuitPython CircuitPython Fake BME280 Library"
+project = "CircuitPython Fake BME280 Library"
 creation_year = "2024"
 current_year = str(datetime.datetime.now().year)
 year_duration = (
@@ -129,7 +129,7 @@ html_static_path = ["_static"]
 html_favicon = "_static/favicon.ico"
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "CircuitPython_Circuitpython_fake_bme280_Librarydoc"
+htmlhelp_basename = "Circuitpython_fake_bme280_Librarydoc"
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -150,8 +150,8 @@ latex_elements = {
 latex_documents = [
     (
         master_doc,
-        "CircuitPython_CircuitPython_Fake_BME280_Library.tex",
-        "CircuitPython CircuitPython Fake BME280 Library Documentation",
+        "CircuitPython_Fake_BME280_Library.tex",
+        "CircuitPython Fake BME280 Library Documentation",
         author,
         "manual",
     ),
@@ -164,8 +164,8 @@ latex_documents = [
 man_pages = [
     (
         master_doc,
-        "CircuitPython_CircuitPython_Fake_BME280_Library",
-        "CircuitPython CircuitPython Fake BME280 Library Documentation",
+        "CircuitPython_Fake_BME280_Library",
+        "CircuitPython Fake BME280 Library Documentation",
         [author],
         1,
     ),
@@ -179,10 +179,10 @@ man_pages = [
 texinfo_documents = [
     (
         master_doc,
-        "CircuitPython_CircuitPython_Fake_BME280_Library",
-        "CircuitPython CircuitPython Fake BME280 Library Documentation",
+        "CircuitPython_Fake_BME280_Library",
+        "CircuitPython Fake BME280 Library Documentation",
         author,
-        "CircuitPython_CircuitPython_Fake_BME280_Library",
+        "CircuitPython_Fake_BME280_Library",
         "One line description of project.",
         "Miscellaneous",
     ),
