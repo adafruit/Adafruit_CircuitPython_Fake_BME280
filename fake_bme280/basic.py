@@ -30,8 +30,8 @@ import os
 from time import sleep
 import socket as pool
 import ssl
-from micropython import const
 import typing  # pylint: disable=unused-import
+from micropython import const
 import adafruit_requests
 from fake_bme280.protocol import I2C_Impl, SPI_Impl
 try:
