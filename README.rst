@@ -18,7 +18,7 @@ Introduction
     :target: https://github.com/psf/black
     :alt: Code Style: Black
 
-**This code is for testing purposes only! If you are looking for a Bosch BME280 driver, please use the `Adafruit_CircuitPython_BME280 <https://github.com/adafruit/Adafruit_CircuitPython_BME280>`_**.
+**This code is for testing purposes only!** If you are looking for a Bosch BME280 driver, please use the `Adafruit_CircuitPython_BME280 <https://github.com/adafruit/Adafruit_CircuitPython_BME280>`_.
 
 This driver mocks the functionality of the `Adafruit_CircuitPython_BME280 <https://github.com/adafruit/Adafruit_CircuitPython_BME280>`_, allowing you to test your code without
 attaching physical hardware.
