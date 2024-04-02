@@ -1,7 +1,6 @@
 # SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
 # SPDX-License-Identifier: MIT
 
-import time
 import board
 from fake_bme280 import basic as adafruit_bme280
 
