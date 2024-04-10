@@ -26,11 +26,10 @@ Implementation Notes
   https://circuitpython.org/downloads
 """
 import math
-import os
-import toml
 import socket as pool
 import ssl
 import typing  # pylint: disable=unused-import
+import toml
 from micropython import const
 import adafruit_requests
 from fake_bme280.protocol import I2C_Impl, SPI_Impl
@@ -77,18 +76,18 @@ _BME280_REGISTER_TEMPDATA = const(0xFA)
 _BME280_REGISTER_HUMIDDATA = const(0xFD)
 
 # Load the settings.toml file
-config = toml.load("settings.toml")
+toml_config = toml.load("settings.toml")
 
 # OpenWeatherMap API
 # GET weather data for a specific location
 DATA_SOURCE = (
     "http://api.openweathermap.org/data/2.5/weather?q="
-    + config["openweather_location"]
+    + toml_config["openweather_location"]
     + "&units="
-    + config["openweather_units"]
+    + toml_config["openweather_units"]
     + "&mode=json"
     + "&appid="
-    + config["openweather_token"]
+    + toml_config["openweather_token"]
 )
 
 

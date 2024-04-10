@@ -10,7 +10,7 @@ from digitalio import DigitalInOut
 class I2C_Impl:
     "Protocol implementation for the I2C bus."
 
-    # pylint: disable=too-few-public-methods
+    # pylint: disable=too-few-public-methods, unused-argument, unused-import
     def __init__(self, i2c: I2C, address: int) -> None:
         from adafruit_bus_device import (  # pylint: disable=import-outside-toplevel
             i2c_device,
