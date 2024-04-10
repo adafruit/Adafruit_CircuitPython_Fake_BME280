@@ -16,7 +16,7 @@ class I2C_Impl:
             i2c_device,
         )
 
-        self._i2c = i2c_device.I2CDevice(i2c, address)
+        # self._i2c = i2c_device.I2CDevice(i2c, address)
 
 
 class SPI_Impl:

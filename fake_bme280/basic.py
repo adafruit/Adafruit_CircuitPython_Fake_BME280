@@ -27,6 +27,7 @@ Implementation Notes
 """
 import math
 import os
+import toml
 import socket as pool
 import ssl
 import typing  # pylint: disable=unused-import
@@ -75,17 +76,19 @@ _BME280_REGISTER_CONFIG = const(0xF5)
 _BME280_REGISTER_TEMPDATA = const(0xFA)
 _BME280_REGISTER_HUMIDDATA = const(0xFD)
 
+# Load the settings.toml file
+config = toml.load("settings.toml")
+
 # OpenWeatherMap API
 # GET weather data for a specific location
-# TODO: this could be cleaned up a bit..
 DATA_SOURCE = (
     "http://api.openweathermap.org/data/2.5/weather?q="
-    + os.getenv("openweather_location")
+    + config["openweather_location"]
     + "&units="
-    + os.getenv("openweather_units")
+    + config["openweather_units"]
     + "&mode=json"
     + "&appid="
-    + os.getenv("openweather_token")
+    + config["openweather_token"]
 )
 
 
@@ -113,11 +116,6 @@ class Adafruit_BME280:
         self.sea_level_pressure = 1013.25
         """Pressure in hectoPascals at sea level. Used to calibrate `altitude`."""
         self._t_fine = None
-        # Configure OpenWeather for mock data
-        self.openweather_token = os.getenv("OPENWEATHER_TOKEN", "default_token")
-        self.openweather_location = os.getenv(
-            "OPENWEATHER_LOCATION", "default_location"
-        )
         # Configure a CPython adafruit_requests session
         self.requests = adafruit_requests.Session(pool, ssl.create_default_context())
         self._current_forcast = None
