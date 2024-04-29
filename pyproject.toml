@@ -41,9 +41,6 @@ classifiers = [
     "Programming Language :: Python :: 3",
 ]
 dynamic = ["dependencies", "optional-dependencies"]
-dependencies = [
-  "toml"
-]
 
 [tool.setuptools]
 packages = ["fake_bme280"]
