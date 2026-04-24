@@ -1,3 +1,6 @@
 # SPDX-FileCopyrightText: 2022 Alec Delaney, for Adafruit Industries
 #
 # SPDX-License-Identifier: Unlicense
+
+# Optional: load OpenWeatherMap settings from a .env file on CPython.
+python-dotenv
