@@ -25,14 +25,26 @@ Implementation Notes
 * Adafruit CircuitPython firmware for the supported boards:
   https://circuitpython.org/downloads
 """
+
 import math
+import os
+import random
 import socket as pool
 import ssl
 import typing  # pylint: disable=unused-import
-import toml
 from micropython import const
 import adafruit_requests
 from fake_bme280.protocol import I2C_Impl, SPI_Impl
+
+try:
+    import toml
+except ImportError:
+    toml = None
+
+try:
+    import dotenv
+except ImportError:
+    dotenv = None
 
 try:
     from busio import I2C, SPI
@@ -75,20 +87,61 @@ _BME280_REGISTER_CONFIG = const(0xF5)
 _BME280_REGISTER_TEMPDATA = const(0xFA)
 _BME280_REGISTER_HUMIDDATA = const(0xFD)
 
-# Load the settings.toml file
-toml_config = toml.load("settings.toml")
-
-# OpenWeatherMap API
-# GET weather data for a specific location
-DATA_SOURCE = (
-    "http://api.openweathermap.org/data/2.5/weather?q="
-    + toml_config["openweather_location"]
-    + "&units="
-    + toml_config["openweather_units"]
-    + "&mode=json"
-    + "&appid="
-    + toml_config["openweather_token"]
+_OPENWEATHER_KEYS = (
+    "openweather_location",
+    "openweather_units",
+    "openweather_token",
 )
+
+_SETTINGS_TOML_PATH = "settings.toml"
+
+
+def _load_openweather_settings() -> dict:
+    """Return OpenWeatherMap settings, trying settings.toml, then .env
+    (python-dotenv), then os.getenv, per key in that order. Raises
+    ``RuntimeError`` if settings.toml is malformed or any key is missing."""
+    toml_values = {}
+    if toml is not None:
+        try:
+            toml_values = toml.load(_SETTINGS_TOML_PATH)
+        except FileNotFoundError:
+            pass
+        except toml.TomlDecodeError as err:
+            raise RuntimeError(
+                "Could not parse %s: %s" % (_SETTINGS_TOML_PATH, err)
+            ) from err
+
+    dotenv_values = dotenv.dotenv_values() if dotenv is not None else {}
+
+    settings = {}
+    for key in _OPENWEATHER_KEYS:
+        value = toml_values.get(key) or dotenv_values.get(key) or os.getenv(key)
+        if value:
+            settings[key] = value
+
+    missing = [k for k in _OPENWEATHER_KEYS if k not in settings]
+    if missing:
+        raise RuntimeError(
+            "fake_bme280 is missing required OpenWeatherMap setting(s): "
+            + ", ".join(missing)
+            + ". Provide them via settings.toml, a .env file (python-dotenv), "
+            "or environment variables. Or construct the sensor with "
+            "use_openweather=False for random fake readings (no network)."
+        )
+    return settings
+
+
+def _build_openweather_url() -> str:
+    """Build the OpenWeatherMap API URL from the loaded settings."""
+    config = _load_openweather_settings()
+    return (
+        "http://api.openweathermap.org/data/2.5/weather?q="
+        + config["openweather_location"]
+        + "&units="
+        + config["openweather_units"]
+        + "&mode=json&appid="
+        + config["openweather_token"]
+    )
 
 
 class Adafruit_BME280:
@@ -101,11 +154,21 @@ class Adafruit_BME280:
     """
 
     # pylint: disable=too-many-instance-attributes
-    def __init__(self, bus_implementation: typing.Union[I2C_Impl, SPI_Impl]) -> None:
-        """Mock a BME280 sensor object that was found on an I2C bus."""
-        # Check device ID.
+    def __init__(
+        self,
+        bus_implementation: typing.Union[I2C_Impl, SPI_Impl],
+        use_openweather: bool = True,
+    ) -> None:
+        """Mock a BME280 sensor object that was found on an I2C bus.
+
+        :param bus_implementation: I2C or SPI implementation wrapper.
+        :param bool use_openweather: When ``True`` (default), read settings
+            from the environment (``settings.toml`` on CircuitPython,
+            environment variables on CPython) and fetch live data from the
+            OpenWeatherMap API. When ``False``, return random plausible
+            readings with no network access and no configuration required.
+        """
         self._bus_implementation = bus_implementation
-        # Set some reasonable defaults.
         self._iir_filter = IIR_FILTER_DISABLE
         self.overscan_humidity = OVERSCAN_X1
         self.overscan_temperature = OVERSCAN_X1
@@ -115,23 +178,42 @@ class Adafruit_BME280:
         self.sea_level_pressure = 1013.25
         """Pressure in hectoPascals at sea level. Used to calibrate `altitude`."""
         self._t_fine = None
-        # Configure a CPython adafruit_requests session
-        self.requests = adafruit_requests.Session(pool, ssl.create_default_context())
-        self._current_forcast = None
-        # Test call get_forecast
-        self.get_forecast()
+        self._use_openweather = use_openweather
+        self._current_forecast = None
+        self._data_source = None
+        self.requests = None
+        if use_openweather:
+            self._data_source = _build_openweather_url()
+            self.requests = adafruit_requests.Session(
+                pool, ssl.create_default_context()
+            )
+            self.get_forecast()
+        else:
+            self._current_forecast = self._random_forecast()
+
+    @staticmethod
+    def _random_forecast() -> dict:
+        """Generate a plausible BME280-shaped reading."""
+        return {
+            "main": {
+                "temp": round(random.uniform(18.0, 28.0), 2),
+                "pressure": round(random.uniform(1000.0, 1025.0), 2),
+                "humidity": round(random.uniform(30.0, 70.0), 2),
+            }
+        }
 
     def get_forecast(self):
-        """Fetch weather from OpenWeatherMap API"""
-        # print("Fetching json from", DATA_SOURCE)
-        response = self.requests.get(DATA_SOURCE)
-        self._current_forcast = response.json()
-        # print(self._current_forcast)
+        """Fetch weather from OpenWeatherMap (or generate fake data)."""
+        if not self._use_openweather:
+            self._current_forecast = self._random_forecast()
+            return
+        response = self.requests.get(self._data_source)
+        self._current_forecast = response.json()
 
     def _read_temperature(self) -> None:
         # Get the OpenWeather temperature and store it in _t_fine
         self.get_forecast()
-        self._t_fine = self._current_forcast["main"]["temp"]
+        self._t_fine = self._current_forecast["main"]["temp"]
 
     @property
     def mode(self) -> int:
@@ -177,7 +259,7 @@ class Adafruit_BME280:
         The compensated pressure in hectoPascals.
         """
         self._read_temperature()
-        return self._current_forcast["main"]["pressure"]
+        return self._current_forecast["main"]["pressure"]
 
     @property
     def relative_humidity(self) -> float:
@@ -192,7 +274,7 @@ class Adafruit_BME280:
         The relative humidity in RH %
         """
         self._read_temperature()
-        humidity = self._current_forcast["main"]["humidity"]
+        humidity = self._current_forecast["main"]["humidity"]
         if humidity > 100:
             return 100
         if humidity < 0:
@@ -253,8 +335,13 @@ class Adafruit_BME280_I2C(Adafruit_BME280):
 
     """
 
-    def __init__(self, i2c: I2C, address: int = 0x77) -> None:  # BME280_ADDRESS
-        super().__init__(I2C_Impl(i2c, address))
+    def __init__(
+        self,
+        i2c: I2C,
+        address: int = 0x77,  # BME280_ADDRESS
+        use_openweather: bool = True,
+    ) -> None:
+        super().__init__(I2C_Impl(i2c, address), use_openweather=use_openweather)
 
 
 class Adafruit_BME280_SPI(Adafruit_BME280):
@@ -305,5 +392,11 @@ class Adafruit_BME280_SPI(Adafruit_BME280):
 
     """
 
-    def __init__(self, spi: SPI, cs: DigitalInOut, baudrate: int = 100000) -> None:
-        super().__init__(SPI_Impl(spi, cs, baudrate))
+    def __init__(
+        self,
+        spi: SPI,
+        cs: DigitalInOut,
+        baudrate: int = 100000,
+        use_openweather: bool = True,
+    ) -> None:
+        super().__init__(SPI_Impl(spi, cs, baudrate), use_openweather=use_openweather)
