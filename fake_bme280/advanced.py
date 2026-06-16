@@ -9,7 +9,7 @@
 CircuitPython driver from BME280 Temperature, Humidity and Barometric
 Pressure sensor
 
-NOTE: This is a mock. The settings exposed here are simply stored and read back - nothing is written to a real device.
+NOTE: This is a mock. The settings exposed here are simply stored and read back.
 
 * Author(s): ladyada, Jose David M.
 
